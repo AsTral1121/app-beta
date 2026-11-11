@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#e30613">
+<title>Ajustes · Defict Despense</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :root {
+    --rojo: #e30613;
+    --rojo-oscuro: #b3050f;
+    --rojo-claro: #ff2a36;
+    --gris-900: #1a1a1a;
+    --gris-700: #3a3a3a;
+    --gris-fondo: #f2f2f2;
+    --texto: #1a1a1a;
+    --texto-muted: #6b6b6b;
+    --borde: #dcdcdc;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .phone-frame {
+    width: 100%;
+    max-width: 430px;
+    height: 100vh;
+    max-height: 932px;
+    background: var(--gris-fondo);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (min-width: 500px) {
+    .phone-frame {
+      height: 90vh;
+      border-radius: 40px;
+      box-shadow: 0 25px 50px -12px rgba(227, 6, 19, 0.35);
+      border: 8px solid var(--gris-900);
+    }
+  }
+
+  .top-bar {
+    height: 6px;
+    background: var(--rojo);
+    flex-shrink: 0;
+  }
+
+  /* ===== CABECERA ===== */
+  .ajustes-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    padding-top: max(18px, env(safe-area-inset-top));
+    flex-shrink: 0;
+  }
+
+  .btn-back {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 2px solid var(--borde);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+  }
+
+  .btn-back svg {
+    width: 22px;
+    height: 22px;
+    stroke: var(--gris-900);
+    stroke-width: 2.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .btn-back:active {
+    transform: scale(0.92);
+    background: var(--rojo);
+    border-color: var(--rojo);
+  }
+
+  .btn-back:active svg { stroke: #fff; }
+
+  .ajustes-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--gris-900);
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+  }
+
+  /* ===== CONTENIDO ===== */
+  .app-content {
+    flex: 1;
+    padding: 8px 22px 40px;
+    padding-bottom: max(40px, env(safe-area-inset-bottom));
+    background:
+      radial-gradient(circle at 50% 0%, rgba(227, 6, 19, 0.08) 0%, transparent 55%),
+      var(--gris-fondo);
+    overflow-y: auto;
+  }
+
+  .app-content::-webkit-scrollbar { display: none; }
+
+  /* ===== LISTA DE AJUSTES ===== */
+  .settings-list {
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    margin-top: 4px;
+  }
+
+  .setting-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 16px 18px;
+    border: none;
+    background: none;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-bottom: 1px solid var(--borde);
+  }
+
+  .setting-item:last-child { border-bottom: none; }
+  .setting-item:active { background: var(--gris-fondo); }
+
+  .setting-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    background: var(--gris-fondo);
+  }
+
+  .setting-icon.red { background: rgba(227, 6, 19, 0.1); }
+
+  .setting-content { flex: 1; min-width: 0; }
+
+  .setting-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--gris-900);
+    margin-bottom: 2px;
+  }
+
+  .setting-title.danger { color: var(--rojo); }
+
+  .setting-sub {
+    font-size: 12px;
+    color: var(--texto-muted);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .setting-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--texto-muted);
+    flex-shrink: 0;
+    margin-right: 2px;
+  }
+
+  .setting-arrow {
+    font-size: 18px;
+    color: #b8b8b8;
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+
+  .danger-zone { margin-top: 20px; }
+
+  .danger-note {
+    font-size: 12px;
+    color: var(--texto-muted);
+    text-align: center;
+    padding: 0 10px;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  .bottom-bar {
+    height: 6px;
+    background: linear-gradient(90deg, var(--gris-900), var(--gris-700), var(--gris-900));
+    flex-shrink: 0;
+  }
+
+  /* ============================================
+     MODALES
+  ============================================ */
+  .modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.55);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s;
+    z-index: 300;
+  }
+
+  .modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal {
+    background: #fff;
+    width: 100%;
+    max-width: 360px;
+    max-height: 80%;
+    border-radius: 24px;
+    padding: 26px 22px 20px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+    transform: scale(0.85) translateY(20px);
+    opacity: 0;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-overlay.show .modal {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+
+  .modal-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    background: rgba(227, 6, 19, 0.1);
+    flex-shrink: 0;
+  }
+
+  .modal-icon.danger {
+    background: rgba(227, 6, 19, 0.12);
+    box-shadow: 0 0 0 6px rgba(227, 6, 19, 0.06);
+  }
+
+  .modal-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--gris-900);
+    text-align: center;
+    letter-spacing: -0.3px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .modal-title.danger { color: var(--rojo); }
+
+  .modal-text {
+    font-size: 14px;
+    color: var(--texto-muted);
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .modal-text strong {
+    color: var(--gris-900);
+    font-weight: 800;
+  }
+
+  /* Contenido scrollable (para leyes / acerca) */
+  .modal-body {
+    overflow-y: auto;
+    text-align: left;
+    margin: 6px 0 18px;
+    padding-right: 4px;
+    max-height: 320px;
+  }
+
+  .modal-body::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .modal-body::-webkit-scrollbar-thumb {
+    background: var(--borde);
+    border-radius: 4px;
+  }
+
+  .modal-body h4 {
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--rojo);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 14px 0 6px;
+  }
+
+  .modal-body h4:first-child { margin-top: 0; }
+
+  .modal-body p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--texto-muted);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .modal-body ul {
+    margin: 6px 0 10px 18px;
+  }
+
+  .modal-body li {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--texto-muted);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  .modal-body strong { color: var(--gris-900); font-weight: 800; }
+
+  /* Botones del modal */
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .modal-btn {
+    flex: 1;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 2px solid var(--borde);
+    background: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .modal-btn:active { transform: scale(0.96); }
+
+  .modal-btn.primary {
+    background: linear-gradient(135deg, var(--rojo-claro), var(--rojo));
+    border-color: var(--rojo);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(227, 6, 19, 0.35);
+  }
+
+  .modal-btn.danger {
+    background: var(--rojo);
+    border-color: var(--rojo);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(227, 6, 19, 0.35);
+  }
+
+  .modal-btn.ghost {
+    color: var(--gris-900);
+  }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--gris-900);
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 400;
+    white-space: nowrap;
+    max-width: 90%;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+
+  <div class="top-bar"></div>
+
+  <header class="ajustes-header">
+    <button class="btn-back" onclick="volverAtras()" aria-label="Volver atrás">
+      <svg viewBox="0 0 24 24">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <h1 class="ajustes-title">Ajustes</h1>
+  </header>
+
+  <main class="app-content">
+
+    <div class="settings-list">
+
+      <button class="setting-item" onclick="abrirLeyes()">
+        <div class="setting-icon">📜</div>
+        <div class="setting-content">
+          <div class="setting-title">Leyes y Permisos</div>
+          <div class="setting-sub">Términos, privacidad y licencias</div>
+        </div>
+        <span class="setting-arrow">›</span>
+      </button>
+
+      <button class="setting-item" onclick="mostrarVersion()">
+        <div class="setting-icon">📱</div>
+        <div class="setting-content">
+          <div class="setting-title">Versión de la app</div>
+          <div class="setting-sub">Información de la build actual</div>
+        </div>
+        <span class="setting-value">v1.0.0</span>
+        <span class="setting-arrow">›</span>
+      </button>
+
+      <button class="setting-item" onclick="abrirAcerca()">
+        <div class="setting-icon">ℹ️</div>
+        <div class="setting-content">
+          <div class="setting-title">Acerca de la app</div>
+          <div class="setting-sub">Conoce Defict Despense</div>
+        </div>
+        <span class="setting-arrow">›</span>
+      </button>
+
+      <button class="setting-item" onclick="eliminarCuenta()">
+        <div class="setting-icon red">🗑️</div>
+        <div class="setting-content">
+          <div class="setting-title danger">Eliminar cuenta</div>
+          <div class="setting-sub">Borra tu cuenta y todos tus datos</div>
+        </div>
+        <span class="setting-arrow">›</span>
+      </button>
+
+    </div>
+
+    <div class="danger-zone">
+      <p class="danger-note">
+        Al eliminar tu cuenta se borrarán permanentemente tus datos personales y de progreso. Esta acción no se puede deshacer.
+      </p>
+    </div>
+
+  </main>
+
+  <div class="bottom-bar"></div>
+
+  <!-- ============================================
+       MODAL: LEYES Y PERMISOS
+  ============================================ -->
+  <div class="modal-overlay" id="modalLeyes">
+    <div class="modal">
+      <div class="modal-icon">📜</div>
+      <h2 class="modal-title">Leyes y Permisos</h2>
+      <div class="modal-body">
+        <h4>Términos de uso</h4>
+        <p>
+          Al usar <strong>Defict Despense</strong> aceptas que la información
+          nutricional y de precios es de carácter orientativo. La app no
+          sustituye el consejo de un profesional de la salud o nutricionista.
+        </p>
+
+        <h4>Privacidad de datos</h4>
+        <p>
+          Tus datos personales (nombre, edad, peso, altura y objetivo) se
+          almacenan <strong>únicamente en tu dispositivo</strong> mediante
+          almacenamiento local. No se envían a ningún servidor externo.
+        </p>
+
+        <h4>Permisos de la app</h4>
+        <ul>
+          <li><strong>Almacenamiento local:</strong> para guardar tu perfil y preferencias.</li>
+          <li><strong>Sin conexión a internet:</strong> la app funciona completamente offline.</li>
+          <li><strong>Sin acceso a cámara, ubicación ni contactos.</strong></li>
+        </ul>
+
+        <h4>Licencias</h4>
+        <p>
+          Las marcas y productos de la <strong>tienda 3B</strong> mencionados
+          son propiedad de sus respectivos dueños. Defict Despense no está
+          afiliada oficialmente con dicha tienda.
+        </p>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn primary" onclick="cerrarModal('modalLeyes')">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       MODAL: ACERCA DE LA APP
+  ============================================ -->
+  <div class="modal-overlay" id="modalAcerca">
+    <div class="modal">
+      <div class="modal-icon">ℹ️</div>
+      <h2 class="modal-title">Acerca de Defict Despense</h2>
+      <div class="modal-body">
+        <p>
+          <strong>Defict Despense</strong> es una aplicación creada para
+          ayudarte a <strong>administrar tu dinero</strong> de la forma más
+          eficaz y barata, combinando productos de la <strong>tienda 3B</strong>
+          con el conocimiento de <strong>platillos esenciales</strong> según
+          tu objetivo fitness.
+        </p>
+
+        <h4>¿Qué puedes hacer?</h4>
+        <ul>
+          <li>💪 Calcular tus calorías según tu objetivo (déficit, mantener o volumen).</li>
+          <li>🛒 Descubrir productos accesibles de la tienda 3B.</li>
+          <li>🥗 Aprender recetas y platillos esenciales ajustados a tu meta.</li>
+          <li>💰 Ahorrar en tu alimentación sin sacrificar resultados.</li>
+        </ul>
+
+        <h4>Nuestra misión</h4>
+        <p>
+          Que cualquier persona pueda entrenar y comer bien con <strong>las 3B:
+          bueno, bonito y barato</strong>, sin excusas.
+        </p>
+
+        <h4>Versión</h4>
+        <p>v1.0.0 · Build 2026.11</p>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn primary" onclick="cerrarModal('modalAcerca')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       MODAL: CONFIRMAR ELIMINAR CUENTA
+  ============================================ -->
+  <div class="modal-overlay" id="modalEliminar1">
+    <div class="modal">
+      <div class="modal-icon danger">🗑️</div>
+      <h2 class="modal-title danger">Eliminar cuenta</h2>
+      <p class="modal-text">
+        ¿Seguro que quieres <strong>eliminar tu cuenta</strong>?<br>
+        Se borrarán tu nombre, progreso y configuración. Esta acción
+        <strong>no se puede deshacer</strong>.
+      </p>
+      <div class="modal-actions">
+        <button class="modal-btn ghost" onclick="cerrarModal('modalEliminar1')">Cancelar</button>
+        <button class="modal-btn danger" onclick="irAEliminar2()">Continuar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalEliminar2">
+    <div class="modal">
+      <div class="modal-icon danger">⚠️</div>
+      <h2 class="modal-title danger">Última confirmación</h2>
+      <p class="modal-text">
+        Esta es la <strong>última oportunidad</strong>.<br>
+        Si continúas, tu cuenta será eliminada <strong>definitivamente</strong>.
+      </p>
+      <div class="modal-actions">
+        <button class="modal-btn ghost" onclick="cerrarModal('modalEliminar2')">Cancelar</button>
+        <button class="modal-btn danger" onclick="confirmarEliminar()">Sí, eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+</div>
+
+<script>
+  // ===== TOAST =====
+  let toastTimeout;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), 2400);
+  }
+
+  // ===== NAVEGACIÓN =====
+  function volverAtras() {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = 'dashboard.html';
+    }
+  }
+
+  // ===== MODALES GENÉRICOS =====
+  function abrirModal(id) {
+    document.getElementById(id).classList.add('show');
+  }
+
+  function cerrarModal(id) {
+    document.getElementById(id).classList.remove('show');
+  }
+
+  // Cerrar modal si se toca fuera de la caja
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.classList.remove('show');
+      }
+    });
+  });
+
+  // Escape cierra cualquier modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show'));
+    }
+  });
+
+  // ===== LEYES =====
+  function abrirLeyes() {
+    abrirModal('modalLeyes');
+  }
+
+  // ===== VERSIÓN =====
+  function mostrarVersion() {
+    showToast('📱 Versión actual: v1.0.0');
+  }
+
+  // ===== ACERCA =====
+  function abrirAcerca() {
+    abrirModal('modalAcerca');
+  }
+
+  // ===== ELIMINAR CUENTA (2 pasos) =====
+  function eliminarCuenta() {
+    abrirModal('modalEliminar1');
+  }
+
+  function irAEliminar2() {
+    cerrarModal('modalEliminar1');
+    setTimeout(() => abrirModal('modalEliminar2'), 180);
+  }
+
+  function confirmarEliminar() {
+    cerrarModal('modalEliminar2');
+    localStorage.removeItem('defictUsuario');
+    showToast('🗑️ Cuenta eliminada correctamente');
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 1500);
+  }
+</script>
+
+</body>
+</html>

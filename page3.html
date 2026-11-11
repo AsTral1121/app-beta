@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#e30613">
+<title>Defict Despense</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :root {
+    --rojo: #e30613;
+    --rojo-oscuro: #b3050f;
+    --rojo-claro: #ff2a36;
+    --gris-900: #1a1a1a;
+    --gris-700: #3a3a3a;
+    --gris-fondo: #f2f2f2;
+    --texto: #1a1a1a;
+    --texto-muted: #6b6b6b;
+    --borde: #dcdcdc;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .phone-frame {
+    width: 100%;
+    max-width: 430px;
+    height: 100vh;
+    max-height: 932px;
+    background: var(--gris-fondo);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (min-width: 500px) {
+    .phone-frame {
+      height: 90vh;
+      border-radius: 40px;
+      box-shadow: 0 25px 50px -12px rgba(227, 6, 19, 0.35);
+      border: 8px solid var(--gris-900);
+    }
+  }
+
+  .top-bar {
+    height: 6px;
+    background: var(--rojo);
+    flex-shrink: 0;
+  }
+
+  .app-content {
+    flex: 1;
+    padding: 24px 22px 40px;
+    padding-top: max(24px, env(safe-area-inset-top));
+    padding-bottom: max(40px, env(safe-area-inset-bottom));
+    background:
+      radial-gradient(circle at 50% 0%, rgba(227, 6, 19, 0.08) 0%, transparent 55%),
+      var(--gris-fondo);
+    overflow-y: auto;
+  }
+
+  .app-content::-webkit-scrollbar {
+    display: none;
+  }
+
+  .bottom-bar {
+    height: 6px;
+    background: linear-gradient(90deg, var(--gris-900), var(--gris-700), var(--gris-900));
+    flex-shrink: 0;
+  }
+
+  /* ===== CABECERA USUARIO ===== */
+  .user-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 6px 0 20px;
+    animation: headerIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+  }
+
+  @keyframes headerIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .user-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--rojo-claro), var(--rojo-oscuro));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 900;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--rojo), 0 8px 20px rgba(227, 6, 19, 0.3);
+    text-transform: uppercase;
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .user-avatar:active { transform: scale(0.92); }
+
+  .user-avatar.open {
+    box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--gris-900), 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .user-info { min-width: 0; }
+
+  .user-greeting {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--texto-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+  }
+
+  .user-name {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--gris-900);
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ===== MENÚ USUARIO ===== */
+  .user-menu {
+    position: absolute;
+    top: 76px;
+    left: 0;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    padding: 8px;
+    min-width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px) scale(0.96);
+    transform-origin: top left;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    z-index: 50;
+    border: 2px solid var(--borde);
+  }
+
+  .user-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 13px 14px;
+    border: none;
+    background: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--texto);
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+  }
+
+  .menu-item:active { background: var(--gris-fondo); }
+
+  .menu-item .menu-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(227, 6, 19, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .menu-divider { height: 1px; background: var(--borde); margin: 6px 8px; }
+
+  .menu-item.danger { color: var(--rojo); }
+
+  .menu-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    z-index: 40;
+  }
+
+  .menu-backdrop.open { opacity: 1; visibility: visible; }
+
+  /* ===== CONTENIDO CENTRAL ===== */
+  .hero-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px 4px 30px;
+    min-height: 340px;
+  }
+
+  .hero-emoji {
+    font-size: 72px;
+    line-height: 1;
+    margin-bottom: 20px;
+    animation: floatEmoji 3s ease-in-out infinite;
+  }
+
+  @keyframes floatEmoji {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+
+  .hero-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--gris-900);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .hero-title span { color: var(--rojo); display: block; }
+
+  .hero-desc {
+    font-size: 14px;
+    color: var(--texto-muted);
+    line-height: 1.6;
+    font-weight: 500;
+    max-width: 300px;
+  }
+
+  .hero-desc strong { color: var(--rojo); font-weight: 800; }
+
+  /* ===== BOTÓN CARRITO ===== */
+  .btn-cart {
+    width: 100%;
+    padding: 18px 24px;
+    margin-top: 26px;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--rojo-claro) 0%, var(--rojo) 45%, var(--rojo-oscuro) 100%);
+    color: white;
+    font-size: 15px;
+    font-weight: 800;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(227, 6, 19, 0.45);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .btn-cart::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -60%;
+    width: 40%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform: skewX(-20deg);
+  }
+
+  .btn-cart:active {
+    transform: scale(0.97);
+    box-shadow: 0 5px 15px rgba(227, 6, 19, 0.35);
+  }
+
+  .btn-cart .cart-icon {
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  /* ===== ANIMACIÓN BIENVENIDA ===== */
+  .welcome-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--rojo) 0%, var(--rojo-oscuro) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    color: #fff;
+    text-align: center;
+    padding: 30px;
+    transition: opacity 0.6s ease, visibility 0.6s;
+  }
+
+  .welcome-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .welcome-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 46px;
+    margin-bottom: 24px;
+    animation: iconPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.1), 0 0 0 12px rgba(255, 255, 255, 0.05);
+  }
+
+  @keyframes iconPop {
+    0%   { transform: scale(0); opacity: 0; }
+    60%  { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+
+  .welcome-overlay h1 {
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    animation: textIn 0.6s ease 0.3s both;
+  }
+
+  .welcome-overlay .welcome-name {
+    display: block;
+    font-size: 34px;
+    margin-top: 6px;
+    text-transform: uppercase;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  .welcome-overlay p {
+    font-size: 15px;
+    font-weight: 500;
+    opacity: 0.9;
+    margin-top: 18px;
+    animation: textIn 0.6s ease 0.6s both;
+  }
+
+  @keyframes textIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .welcome-loader {
+    width: 160px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    margin-top: 40px;
+    overflow: hidden;
+    animation: textIn 0.6s ease 0.8s both;
+  }
+
+  .welcome-loader::after {
+    content: "";
+    display: block;
+    width: 40%;
+    height: 100%;
+    background: #fff;
+    border-radius: 4px;
+    animation: loadBar 1.6s ease-in-out infinite;
+  }
+
+  @keyframes loadBar {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+
+  <div class="top-bar"></div>
+
+  <main class="app-content">
+
+    <!-- CABECERA CON LOGO BOTÓN + NOMBRE -->
+    <div class="user-header">
+      <button class="user-avatar" id="avatarBtn" aria-label="Menú de usuario">U</button>
+      <div class="user-info">
+        <div class="user-greeting">Bienvenido</div>
+        <div class="user-name" id="userName">Usuario</div>
+      </div>
+
+      <!-- MENÚ DESPLEGABLE -->
+      <div class="user-menu" id="userMenu">
+        <button class="menu-item" onclick="modificarDatos()">
+          <span class="menu-icon">✏️</span>
+          Modificar mis datos
+        </button>
+        <button class="menu-item" onclick="irAjustes()">
+          <span class="menu-icon">⚙️</span>
+          Ajustes
+        </button>
+        <div class="menu-divider"></div>
+        <button class="menu-item danger" onclick="cerrarSesion()">
+          <span class="menu-icon">🚪</span>
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+
+    <div class="menu-backdrop" id="menuBackdrop" onclick="cerrarMenu()"></div>
+
+    <!-- CONTENIDO CENTRAL -->
+    <div class="hero-content">
+      <div class="hero-emoji">🛒</div>
+      <h2 class="hero-title">
+        Tu carrito <span>inteligente</span>
+      </h2>
+      <p class="hero-desc">
+        Arma tu carrito con productos de la <strong>tienda 3B</strong> y
+        descubre cómo comer rico, barato y según tu objetivo fitness.
+      </p>
+
+      <!-- BOTÓN CARRITO -->
+      <button class="btn-cart" onclick="irAlCarrito()">
+        <span class="cart-icon">🛒</span>
+        Vamos a armarnos nuestro carrito
+      </button>
+    </div>
+
+  </main>
+
+  <div class="bottom-bar"></div>
+
+  <!-- ANIMACIÓN BIENVENIDA -->
+  <div class="welcome-overlay" id="welcomeOverlay">
+    <div class="welcome-icon">💪</div>
+    <h1>
+      ¡Bienvenido!
+      <span class="welcome-name" id="welcomeName">Usuario</span>
+    </h1>
+    <p>Tu camino hacia el objetivo empieza hoy</p>
+    <div class="welcome-loader"></div>
+  </div>
+
+</div>
+
+<script>
+  // ===== 1. Cargar datos =====
+  const raw = localStorage.getItem('defictUsuario');
+  let usuario = null;
+
+  if (raw) {
+    try { usuario = JSON.parse(raw); } catch (e) { usuario = null; }
+  }
+
+  if (!usuario || !usuario.nombre) {
+    alert('⚠️ No hay datos guardados. Primero completa el formulario.');
+    window.location.href = 'page2.html';
+  } else {
+    const nombre = usuario.nombre;
+    const inicial = nombre.charAt(0).toUpperCase();
+
+    document.getElementById('avatarBtn').textContent = inicial;
+    document.getElementById('userName').textContent = nombre;
+    document.getElementById('welcomeName').textContent = nombre;
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('welcomeOverlay').classList.add('hidden');
+      }, 2200);
+    });
+  }
+
+  // ===== 2. Menú usuario =====
+  const avatarBtn = document.getElementById('avatarBtn');
+  const userMenu = document.getElementById('userMenu');
+  const menuBackdrop = document.getElementById('menuBackdrop');
+
+  avatarBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    userMenu.classList.contains('open') ? cerrarMenu() : abrirMenu();
+  });
+
+  function abrirMenu() {
+    userMenu.classList.add('open');
+    menuBackdrop.classList.add('open');
+    avatarBtn.classList.add('open');
+  }
+
+  function cerrarMenu() {
+    userMenu.classList.remove('open');
+    menuBackdrop.classList.remove('open');
+    avatarBtn.classList.remove('open');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') cerrarMenu();
+  });
+
+  // ===== 3. Acciones menú =====
+  function modificarDatos() {
+    cerrarMenu();
+    window.location.href = 'page2.html'; // Formulario
+  }
+
+  function irAjustes() {
+    cerrarMenu();
+    window.location.href = 'ajustes.html';
+  }
+
+  function cerrarSesion() {
+    cerrarMenu();
+    if (confirm('¿Seguro que quieres cerrar sesión? Se borrarán tus datos guardados.')) {
+      localStorage.removeItem('defictUsuario');
+      window.location.href = 'index.html'; // Landing inicial
+    }
+  }
+
+  // ===== 4. Ir al carrito =====
+  function irAlCarrito() {
+    window.location.href = 'page4.html';
+  }
+</script>
+
+</body>
+</html>

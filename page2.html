@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#e30613">
+<title>PAGINA 2</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :root {
+    --rojo: #e30613;
+    --rojo-oscuro: #b3050f;
+    --rojo-claro: #ff2a36;
+    --gris-900: #1a1a1a;
+    --gris-700: #3a3a3a;
+    --gris-300: #b8b8b8;
+    --gris-fondo: #f2f2f2;
+    --texto: #1a1a1a;
+    --texto-muted: #6b6b6b;
+    --borde: #dcdcdc;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .phone-frame {
+    width: 100%;
+    max-width: 430px;
+    height: 100vh;
+    max-height: 932px;
+    background: var(--gris-fondo);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (min-width: 500px) {
+    .phone-frame {
+      height: 90vh;
+      border-radius: 40px;
+      box-shadow: 0 25px 50px -12px rgba(227, 6, 19, 0.35);
+      border: 8px solid var(--gris-900);
+    }
+  }
+
+  .top-bar {
+    height: 6px;
+    background: var(--rojo);
+    flex-shrink: 0;
+  }
+
+  .app-content {
+    flex: 1;
+    padding: 24px 22px 40px;
+    padding-top: max(24px, env(safe-area-inset-top));
+    padding-bottom: max(40px, env(safe-area-inset-bottom));
+    background:
+      radial-gradient(circle at 50% 0%, rgba(227, 6, 19, 0.08) 0%, transparent 55%),
+      var(--gris-fondo);
+    overflow-y: auto;
+  }
+
+  .app-content::-webkit-scrollbar {
+    display: none;
+  }
+
+  .welcome-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--gris-900);
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+
+  .welcome-title span {
+    color: var(--rojo);
+  }
+
+  .divider {
+    width: 50px;
+    height: 4px;
+    background: var(--rojo);
+    border-radius: 4px;
+    margin: 12px 0 16px;
+  }
+
+  .welcome-desc {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--texto-muted);
+    font-weight: 500;
+    margin-bottom: 26px;
+  }
+
+  .welcome-desc strong {
+    color: var(--rojo);
+    font-weight: 800;
+  }
+
+  .form-intro {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--gris-900);
+    line-height: 1.3;
+    margin-bottom: 18px;
+  }
+
+  .form-intro::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--rojo);
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--gris-900);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 7px;
+  }
+
+  .form-input,
+  .form-select {
+    width: 100%;
+    padding: 15px 16px;
+    border: 2px solid var(--borde);
+    border-radius: 12px;
+    background: #fff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--texto);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .form-input::placeholder {
+    color: #a3a3a3;
+    font-weight: 500;
+  }
+
+  .form-input:focus,
+  .form-select:focus {
+    outline: none;
+    border-color: var(--rojo);
+    box-shadow: 0 0 0 4px rgba(227, 6, 19, 0.12);
+  }
+
+  .form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23e30613' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 42px;
+    cursor: pointer;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .input-unit {
+    position: relative;
+  }
+
+  .input-unit .form-input {
+    padding-right: 52px;
+  }
+
+  .input-unit .unit {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--rojo);
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  .toggle-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .toggle-group.three {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .toggle-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .toggle-option label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 14px 8px;
+    border: 2px solid var(--borde);
+    border-radius: 12px;
+    background: #fff;
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--texto-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1.2;
+    height: 100%;
+  }
+
+  .toggle-option input:checked + label {
+    background: var(--rojo);
+    border-color: var(--rojo);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(227, 6, 19, 0.35);
+  }
+
+  .toggle-option input:focus-visible + label {
+    box-shadow: 0 0 0 4px rgba(227, 6, 19, 0.18);
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 18px 24px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--rojo-claro) 0%, var(--rojo) 45%, var(--rojo-oscuro) 100%);
+    color: white;
+    font-size: 16px;
+    font-weight: 800;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(227, 6, 19, 0.45);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-submit::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -60%;
+    width: 40%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform: skewX(-20deg);
+  }
+
+  .btn-submit:active {
+    transform: scale(0.97);
+    box-shadow: 0 5px 15px rgba(227, 6, 19, 0.35);
+  }
+
+  .bottom-bar {
+    height: 6px;
+    background: linear-gradient(90deg, var(--gris-900), var(--gris-700), var(--gris-900));
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+
+  <div class="top-bar"></div>
+
+  <main class="app-content">
+
+    <h2 class="welcome-title">
+      Bienvenido a <span>Defict Despense</span>
+    </h2>
+    <div class="divider"></div>
+    <p class="welcome-desc">
+      <strong>Defict Despense</strong> es una app que te ayudará a
+      <strong>administrar tu dinero</strong> de la forma más eficaz y barata
+      consiguiendo productos de la <strong>tienda 3B</strong> y tener
+      conocimientos de <strong>platillos esenciales</strong> según tu
+      objetivo fitness.
+    </p>
+
+    <p class="form-intro">Para continuar, empecemos conociéndote</p>
+
+    <form id="formPersonal" onsubmit="guardarDatos(event)">
+
+      <div class="form-group">
+        <label class="form-label" for="nombre">Nombre</label>
+        <input class="form-input" type="text" id="nombre" name="nombre"
+               placeholder="Tu nombre" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="edad">Edad</label>
+          <div class="input-unit">
+            <input class="form-input" type="number" id="edad" name="edad"
+                   placeholder="0" min="10" max="100" required>
+            <span class="unit">años</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="peso">Peso</label>
+          <div class="input-unit">
+            <input class="form-input" type="number" id="peso" name="peso"
+                   placeholder="0" min="20" max="300" step="0.1" required>
+            <span class="unit">kg</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="altura">Altura</label>
+        <div class="input-unit">
+          <input class="form-input" type="number" id="altura" name="altura"
+                 placeholder="0" min="80" max="250" required>
+          <span class="unit">cm</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <span class="form-label">Estilo de vida</span>
+        <div class="toggle-group">
+          <div class="toggle-option">
+            <input type="radio" id="vida-activo" name="estiloVida" value="activo" checked>
+            <label for="vida-activo">Activo</label>
+          </div>
+          <div class="toggle-option">
+            <input type="radio" id="vida-sedentario" name="estiloVida" value="sedentario">
+            <label for="vida-sedentario">Sedentario</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <span class="form-label">Objetivo</span>
+        <div class="toggle-group three">
+          <div class="toggle-option">
+            <input type="radio" id="obj-deficit" name="objetivo" value="deficit" checked>
+            <label for="obj-deficit">Déficit<br>Calórico</label>
+          </div>
+          <div class="toggle-option">
+            <input type="radio" id="obj-mantener" name="objetivo" value="mantener">
+            <label for="obj-mantener">Mantener</label>
+          </div>
+          <div class="toggle-option">
+            <input type="radio" id="obj-volumen" name="objetivo" value="volumen">
+            <label for="obj-volumen">Volumen</label>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">Continuar</button>
+
+    </form>
+
+  </main>
+
+  <div class="bottom-bar"></div>
+
+</div>
+
+<script>
+  function guardarDatos(event) {
+    event.preventDefault();
+
+    const datos = {
+      nombre: document.getElementById('nombre').value.trim(),
+      edad: Number(document.getElementById('edad').value),
+      peso: Number(document.getElementById('peso').value),
+      altura: Number(document.getElementById('altura').value),
+      estiloVida: document.querySelector('input[name="estiloVida"]:checked').value,
+      objetivo: document.querySelector('input[name="objetivo"]:checked').value
+    };
+
+    // Guardar en localStorage
+    localStorage.setItem('defictUsuario', JSON.stringify(datos));
+
+    // Alerta de confirmación
+    alert('✅ ¡Datos guardados correctamente en localStorage, ' + datos.nombre + '!');
+
+    // Redirigir a otro index
+    window.location.href = 'page3.html';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#e30613">
+<title>Defict Despense</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :root {
+    --rojo: #e30613;
+    --rojo-oscuro: #b3050f;
+    --rojo-claro: #ff2a36;
+    --gris-900: #1a1a1a;
+    --gris-700: #3a3a3a;
+    --gris-fondo: #f2f2f2;
+    --texto: #1a1a1a;
+    --texto-muted: #6b6b6b;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .phone-frame {
+    width: 100%;
+    max-width: 430px;
+    height: 100vh;
+    max-height: 932px;
+    background: var(--gris-fondo);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (min-width: 500px) {
+    .phone-frame {
+      height: 90vh;
+      border-radius: 40px;
+      box-shadow: 0 25px 50px -12px rgba(227, 6, 19, 0.35);
+      border: 8px solid var(--gris-900);
+    }
+  }
+
+  .top-bar {
+    height: 6px;
+    background: var(--rojo);
+    flex-shrink: 0;
+  }
+
+  .app-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 28px;
+    padding-top: max(40px, env(safe-area-inset-top));
+    padding-bottom: max(40px, env(safe-area-inset-bottom));
+    background:
+      radial-gradient(circle at 50% 0%, rgba(227, 6, 19, 0.08) 0%, transparent 55%),
+      var(--gris-fondo);
+  }
+
+  .logo-wrap {
+    width: 130px;
+    height: 130px;
+    border-radius: 30px;
+    background: var(--gris-900);
+    padding: 8px;
+    margin-bottom: 28px;
+    box-shadow:
+      0 0 0 4px var(--rojo),
+      0 12px 30px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: logoIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .logo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 22px;
+    display: block;
+  }
+
+  @keyframes logoIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .app-title {
+    font-size: 34px;
+    font-weight: 900;
+    color: var(--gris-900);
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  .app-title span {
+    color: var(--rojo);
+    display: block;
+    font-size: 30px;
+    letter-spacing: 2px;
+  }
+
+  .app-subtitle {
+    font-size: 16px;
+    color: var(--texto-muted);
+    line-height: 1.5;
+    font-weight: 500;
+    max-width: 300px;
+    margin-bottom: 40px;
+  }
+
+  .app-subtitle strong {
+    color: var(--rojo);
+    font-weight: 800;
+  }
+
+  .btn-start {
+    width: 100%;
+    max-width: 320px;
+    padding: 18px 24px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--rojo-claro) 0%, var(--rojo) 45%, var(--rojo-oscuro) 100%);
+    color: white;
+    font-size: 17px;
+    font-weight: 800;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(227, 6, 19, 0.45);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-start::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -60%;
+    width: 40%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform: skewX(-20deg);
+  }
+
+  .btn-start:active {
+    transform: scale(0.97);
+    box-shadow: 0 5px 15px rgba(227, 6, 19, 0.35);
+  }
+
+  .bottom-bar {
+    height: 6px;
+    background: linear-gradient(90deg, var(--gris-900), var(--gris-700), var(--gris-900));
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+
+  <div class="top-bar"></div>
+
+  <main class="app-content">
+
+    <div class="logo-wrap">
+      <img
+        src="https://i.postimg.cc/7Z6TcphH/Whats-App-Image-2026-11-11-at-11-01-26-AM.jpg"
+        alt="Logo Defict Despense">
+    </div>
+
+    <h1 class="app-title">
+      Defict
+      <span>Despense</span>
+    </h1>
+
+    <p class="app-subtitle">
+      Prepara tu dieta con las <strong>3B</strong> y deja las excusas
+    </p>
+
+    <!-- BOTÓN que redirige a index.html -->
+    <a href="page2.html" class="btn-start">Comenzar</a>
+
+  </main>
+
+  <div class="bottom-bar"></div>
+
+</div>
+
+</body>
+</html>
